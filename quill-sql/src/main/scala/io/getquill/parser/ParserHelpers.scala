@@ -68,7 +68,7 @@ object ParserHelpers {
 
       def unapply(expr: Expr[_]): Option[Assignment] =
         UntypeExpr(expr) match
-          case Components(ident, identTpe, prop, value) => 
+          case Components(ident, identTpe, prop, value) =>
             Some(Assignment(cleanIdent(ident, identTpe), astParse(prop), astParse(value)))
           case _ => None
     }
@@ -335,16 +335,16 @@ object ParserHelpers {
       */
       def tupleBindsPath(field: Tree, path: List[String] = List()): List[(AIdent, List[String])] = {
         UntypeTree(field) match {
-          case Bind(name, TIdent(_)) => List(AIdent(name) -> path)
+          case Bind(name, TIdent(_) | WildcardPattern()) => List(AIdent(name) -> path)
           case Unapply(Method0(TupleIdent(), "unapply"), something, binds) =>
             binds.zipWithIndex.flatMap { case (bind, idx) =>
               tupleBindsPath(bind, path :+ s"_${idx + 1}")
             }
           // If it's a "case _ => ..." then that just translates into the body expression so we don't
           // need a clause to beta reduction over the entire partial-function
-          case TIdent("_") =>
+          case WildcardPattern() =>
             List()
-          case other => 
+          case other =>
             val addition = messageExpr match
               case Some(expr) => s" in the expression: ${Format.Tree(expr)}"
               case None => ""
