@@ -42,7 +42,7 @@ class ArrayJdbcEncodingSpec extends ArrayEncodingBaseSpec {
         arrayDecoder[LocalDate, LocalDate, Col](identity)
     }
     import newCtx._
-    newCtx.run(query[ArraysTestEntity].insert(lift(corrected)))
+    newCtx.run(query[ArraysTestEntity].insert(lift[ArraysTestEntity](corrected)))
     intercept[IllegalStateException] {
       newCtx.run(query[ArraysTestEntity]).head mustBe corrected
     }
@@ -71,7 +71,7 @@ class ArrayJdbcEncodingSpec extends ArrayEncodingBaseSpec {
 
   "empty array on found null" in {
     case class ArraysTestEntity(texts: Option[List[String]])
-    ctx.run(query[ArraysTestEntity].insert(lift(ArraysTestEntity(None))))
+    ctx.run(query[ArraysTestEntity].insert(lift[ArraysTestEntity](ArraysTestEntity(None))))
 
     case class E(texts: List[String])
     ctx.run(querySchema[E]("ArraysTestEntity")).headOption.map(_.texts) mustBe Some(Nil)

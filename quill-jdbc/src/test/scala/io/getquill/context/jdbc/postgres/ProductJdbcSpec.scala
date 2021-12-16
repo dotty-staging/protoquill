@@ -56,7 +56,7 @@ class ProductJdbcSpec extends ProductSpec {
 
     "Single product insert with a method quotation" in {
       val prd = Product(0L, "test3", 3L)
-      val inserted = testContext.run(productInsert(lift(prd)))
+      val inserted = testContext.run(productInsert (lift(prd)))
       val returnedProduct = testContext.run(productById(lift(inserted))).head
       returnedProduct.description mustEqual "test3"
       returnedProduct.sku mustEqual 3L

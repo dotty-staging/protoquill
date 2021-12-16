@@ -66,7 +66,7 @@ class ArrayAsyncEncodingSpec extends ArrayEncodingBaseSpec {
           arrayDecoder[LocalDate, LocalDate, Col](identity)
       }
       import newCtx._
-      inline def insertQ = quote { query[ArraysTestEntity].insert(lift(e)) }
+      inline def insertQ = quote { query[ArraysTestEntity].insert(lift[ArraysTestEntity](e)) }
       await(newCtx.run(insertQ))
       intercept[IllegalStateException] {
         await(newCtx.run(query[ArraysTestEntity])).head mustBe e
@@ -213,7 +213,7 @@ class ArrayAsyncEncodingSpec extends ArrayEncodingBaseSpec {
           arrayDecoder[LocalDate, LocalDate, Col](identity)
       }
       import newCtx._
-      val insertQ = quote { query[ArraysTestEntity].insert(lift(e)) }
+      val insertQ = quote { query[ArraysTestEntity].insert(lift[ArraysTestEntity](e)) }
       await(newCtx.run(insertQ))
       intercept[IllegalStateException] {
         await(newCtx.run(query[ArraysTestEntity])).head mustBe e

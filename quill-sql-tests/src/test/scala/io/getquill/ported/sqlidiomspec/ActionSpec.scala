@@ -46,9 +46,9 @@ class ActionSpec extends Spec {
           val groups =
             testContext.run(
               liftQuery(List(v)).foreach(v => query[TestEntity].insert(v))
-            ).groups mustEqual 
+            ).groups mustEqual
               List((
-                "INSERT INTO TestEntity (s,i,l,o,b) VALUES (?, ?, ?, ?, ?)", 
+                "INSERT INTO TestEntity (s,i,l,o,b) VALUES (?, ?, ?, ?, ?)",
                 List(Row("_1" -> "s", "_2" -> 1, "_3" -> 2L, "_4" -> Some("_1" -> 1), "_5" -> true))
               )
             )
@@ -90,14 +90,14 @@ class ActionSpec extends Spec {
       "returning" in testContext.withDialect(MirrorSqlDialectWithReturnMulti) { ctx =>
         import ctx._
         val q = quote {
-          query[TestEntity].insert(lift(TestEntity("s", 1, 2L, Some(1), true))).returning(_.l)
+          query[TestEntity].insert(lift[TestEntity](TestEntity("s", 1, 2L, Some(1), true))).returning(_.l)
         }
         val run = ctx.run(q).string mustEqual
           "INSERT INTO TestEntity (s,i,l,o,b) VALUES (?, ?, ?, ?, ?)"
       }
       "returning generated" in {
         val q = quote {
-          query[TestEntity].insert(lift(TestEntity("s", 1, 2L, Some(1), true))).returningGenerated(_.l)
+          query[TestEntity].insert(lift[TestEntity](TestEntity("s", 1, 2L, Some(1), true))).returningGenerated(_.l)
         }
         val run = testContext.run(q).string mustEqual
           "INSERT INTO TestEntity (s,i,o,b) VALUES (?, ?, ?, ?)"

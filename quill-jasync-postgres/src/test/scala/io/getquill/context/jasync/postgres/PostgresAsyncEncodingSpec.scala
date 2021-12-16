@@ -38,7 +38,7 @@ class PostgresAsyncEncodingSpec extends EncodingSpec {
     val rez0 = Await.result(testContext.run(q0), Duration.Inf)
 
     //insert new uuid
-    val rez1 = Await.result(testContext.run(query[EncodingUUIDTestEntity].insert(lift(EncodingUUIDTestEntity(testUUID)))), Duration.Inf)
+    val rez1 = Await.result(testContext.run(query[EncodingUUIDTestEntity].insert(lift[EncodingUUIDTestEntity](EncodingUUIDTestEntity(testUUID)))), Duration.Inf)
 
     //verify you can get the uuid back from the db
     val q2 = quote(query[EncodingUUIDTestEntity].map(p => p.v1))
@@ -95,7 +95,7 @@ class PostgresAsyncEncodingSpec extends EncodingSpec {
     val entity = DateEncodingTestEntity(JodaLocalDate.now, JodaLocalDateTime.now, JodaDateTime.now)
     val r = for {
       _ <- testContext.run(query[DateEncodingTestEntity].delete)
-      _ <- testContext.run(query[DateEncodingTestEntity].insert(lift(entity)))
+      _ <- testContext.run(query[DateEncodingTestEntity].insert(lift[DateEncodingTestEntity](entity)))
       result <- testContext.run(query[DateEncodingTestEntity])
     } yield result
     Await.result(r, Duration.Inf) mustBe Seq(entity)
@@ -106,7 +106,7 @@ class PostgresAsyncEncodingSpec extends EncodingSpec {
     val entity = DateEncodingTestEntity(LocalDate.now, LocalDateTime.now, ZonedDateTime.now)
     val r = for {
       _ <- testContext.run(query[DateEncodingTestEntity].delete)
-      _ <- testContext.run(query[DateEncodingTestEntity].insert(lift(entity)))
+      _ <- testContext.run(query[DateEncodingTestEntity].insert(lift[DateEncodingTestEntity](entity)))
       result <- testContext.run(query[DateEncodingTestEntity])
     } yield result
     Await.result(r, Duration.Inf) mustBe Seq(entity)

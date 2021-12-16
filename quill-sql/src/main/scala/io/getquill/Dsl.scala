@@ -53,7 +53,7 @@ trait Dsl extends QuoteDsl with QueryDsl with MetaDsl
 
 trait MetaDsl extends QueryDsl {
 
-  inline def schemaMeta[T](inline entity: String, inline columns: (T => (Any, String))*): SchemaMeta[T] = 
+  inline def schemaMeta[T](inline entity: String, inline columns: (T => (Any, String))*): SchemaMeta[T] =
     ${ SchemaMetaMacro[T]('this, 'entity, 'columns) }
 
   inline def queryMeta[T, R](inline expand: Quoted[Query[T] => Query[R]])(inline extract: R => T): QueryMeta[T, R] =
