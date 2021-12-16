@@ -43,10 +43,10 @@ class JdbcEncodingSpec extends EncodingSpec {
     val res: (List[EncodingTestEntity], List[EncodingTestEntity]) = {
       val steps = {
         testContext.run(query[EncodingTestEntity].delete)
-        testContext.run(query[EncodingTestEntity].insert(lift(e1)))
+        testContext.run(query[EncodingTestEntity].insertValue(lift(e1)))
         val withoutNull = testContext.run(query[EncodingTestEntity])
         testContext.run(query[EncodingTestEntity].delete)
-        testContext.run(query[EncodingTestEntity].insert(lift(e2)))
+        testContext.run(query[EncodingTestEntity].insertValue(lift(e2)))
         val withNull = testContext.run(query[EncodingTestEntity])
         (withoutNull, withNull)
       }

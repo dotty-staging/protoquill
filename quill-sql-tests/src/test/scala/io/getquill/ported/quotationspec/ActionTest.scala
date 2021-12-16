@@ -36,7 +36,7 @@ class ActionTest extends Spec with TestEntities with Inside {
       }
       "case class" in {
         inline def q = quote {
-          (t: TestEntity) => qr1.update(t)
+          (t: TestEntity) => qr1.updateValue(t)
         }
         val n = quote {
           (t: TestEntity) =>
@@ -74,7 +74,7 @@ class ActionTest extends Spec with TestEntities with Inside {
       }
       "case class" in {
         inline def q = quote {
-          (t: TestEntity) => qr1.insert(t)
+          (t: TestEntity) => qr1.insertValue(t)
         }
         val n = quote {
           (t: TestEntity) =>

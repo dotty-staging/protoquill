@@ -40,7 +40,7 @@ object ExecutionType:
   case object Dynamic extends ExecutionType
   case object Static extends ExecutionType
 
-/** 
+/**
  * Metadata related to query execution. Note that AST should be lazy so as not to be evaluated
  * at runtime (which would happen with a by-value property since `{ ExecutionInfo(stuff, ast) } is spliced
  * into a query-execution site)
@@ -75,7 +75,7 @@ trait ProtoContext[Dialect <: io.getquill.idiom.Idiom, Naming <: io.getquill.Nam
 
   def idiom: Dialect
   def naming: Naming
-  
+
   val identityPrepare: Prepare = (Nil, _)
   val identityExtractor = identity[ResultRow] _
 
@@ -109,11 +109,11 @@ import io.getquill.generic.DecodeAlternate
 // TODO Needs to be portable (i.e. plug into current contexts when compiled with Scala 3)
 trait Context[Dialect <: io.getquill.idiom.Idiom, Naming <: io.getquill.NamingStrategy]
 extends ProtoContext[Dialect, Naming]
-with EncodingDsl 
+with EncodingDsl
 with Closeable
 { self =>
 
-  
+
   type DatasourceContextBehavior <: DatasourceContextInjection
 
   // TODO Go back to this when implementing GenericDecoder using standard method
@@ -122,16 +122,16 @@ with Closeable
   //   inline def decode(t: T) = ${ DecodeAlternate[T, ResultRow] }
 
   implicit inline def dec[T]: GenericDecoder[ResultRow, T, DecodingType.Generic] = ${ GenericDecoder.summon[T, ResultRow] }
-    
+
 
   //def probe(statement: String): Try[_]
   // todo add 'prepare' i.e. encoders here
   //def executeAction[T](cql: String, prepare: Prepare = identityPrepare)(implicit executionContext: ExecutionContext): Result[RunActionResult]
 
-  inline def lift[T](inline runtimeValue: T): T = 
+  inline def lift[T](inline runtimeValue: T): T =
     ${ LiftMacro[T, PrepareRow]('runtimeValue) } // Needs PrepareRow in order to be able to summon encoders
 
-  inline def liftQuery[U[_] <: Iterable[_], T](inline runtimeValue: U[T]): Query[T] = 
+  inline def liftQuery[U[_] <: Iterable[_], T](inline runtimeValue: U[T]): Query[T] =
     ${ LiftQueryMacro[T, U, PrepareRow]('runtimeValue) }
 
   extension [T](inline q: Query[T]) {
@@ -176,7 +176,7 @@ with Closeable
     val ca = new ContextOperation[E, T, Dialect, Naming, PrepareRow, ResultRow, this.type, Result[RunActionReturningResult[T]]](self.idiom, self.naming) {
       def execute(sql: String, prepare: PrepareRow => (List[Any], PrepareRow), extraction: Extraction[ResultRow, T], executionInfo: ExecutionInfo) =
         // Need an extractor with special information that helps with the SQL returning specifics
-        val Extraction.Returning(extract, returningBehavior) = 
+        val Extraction.Returning(extract, returningBehavior) =
           // Just match on the type and throw an exception. The outside val right above will do the deconstruction
           extraction match
             // Can't check types inside Returning[_, _] during runtime due to type-erasure so scala will give a warning
@@ -207,7 +207,7 @@ with Closeable
       def execute(sql: String, prepares: List[PrepareRow => (List[Any], PrepareRow)], extraction: Extraction[ResultRow, T], executionInfo: ExecutionInfo) =
         val runContext = DatasourceContextInjectionMacro[DatasourceContextBehavior, DatasourceContext, this.type](context)
 
-        val Extraction.Returning(extract, returningBehavior) = 
+        val Extraction.Returning(extract, returningBehavior) =
           extraction match
             case _: Extraction.Returning[_, _] => extraction
             case _ => throw new IllegalArgumentException("Returning Extractor required")
