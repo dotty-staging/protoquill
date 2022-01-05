@@ -6,7 +6,7 @@ import io.getquill._
 import scala.compiletime.{erasedValue, summonFrom, constValue}
 
 object TypeclassExample_Functor {
-  
+
   val ctx = new MirrorContext(MirrorSqlDialect, Literal)
   import ctx._
 
@@ -16,12 +16,12 @@ object TypeclassExample_Functor {
     extension [A, B](inline x: F[A])
       inline def map(inline f: A => B): F[B]
 
-  inline given Functor[List] with
+  given Functor[List] with
     extension [A, B](inline xs: List[A])
       inline def map(inline f: A => B): List[B] = xs.map(f)
-    
 
-  inline given Functor[Query] with
+
+  given Functor[Query] with
     extension [A, B](inline xs: Query[A])
       inline def map(inline f: A => B): Query[B] = xs.map(f)
 

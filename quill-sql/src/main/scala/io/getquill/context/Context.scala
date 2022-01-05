@@ -40,7 +40,7 @@ object ExecutionType:
   case object Dynamic extends ExecutionType
   case object Static extends ExecutionType
 
-/** 
+/**
  * Metadata related to query execution. Note that AST should be lazy so as not to be evaluated
  * at runtime (which would happen with a by-value property since `{ ExecutionInfo(stuff, ast) } is spliced
  * into a query-execution site)
@@ -75,7 +75,7 @@ trait ProtoContext[Dialect <: io.getquill.idiom.Idiom, Naming <: io.getquill.Nam
 
   def idiom: Dialect
   def naming: Naming
-  
+
   val identityPrepare: Prepare = (Nil, _)
   val identityExtractor = identity[ResultRow] _
 

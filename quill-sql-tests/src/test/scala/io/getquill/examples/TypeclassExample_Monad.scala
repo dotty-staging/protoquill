@@ -5,7 +5,7 @@ import scala.compiletime.{erasedValue, summonFrom, constValue}
 import io.getquill._
 
 object TypeclassExample_Monad {
-  
+
   val ctx = new MirrorContext(MirrorSqlDialect, Literal)
   import ctx._
 
@@ -18,12 +18,12 @@ object TypeclassExample_Monad {
       inline def map(inline f: A => B): F[B]
       inline def flatMap(inline f: A => F[B]): F[B]
 
-  inline given Monad[List] with
+  given Monad[List] with
     extension [A, B](inline xs: List[A])
       inline def map(inline f: A => B): List[B] = xs.map(f)
       inline def flatMap(inline f: A => List[B]): List[B] = xs.flatMap(f)
 
-  inline given Monad[Query] with
+  given Monad[Query] with
     extension [A, B](inline xs: Query[A])
       inline def map(inline f: A => B): Query[B] = xs.map(f)
       inline def flatMap(inline f: A => Query[B]): Query[B] = xs.flatMap(f)
@@ -32,7 +32,7 @@ object TypeclassExample_Monad {
     inline def mapM(inline f: A => B) = from.map(f)
     inline def flatMapM(inline f: A => F[B]) = from.flatMap(f)
   }
-  
+
   def main(args: Array[String]): Unit = {
     inline def people: Query[Person] = query[Person]
     inline def addresses: Query[Address] = query[Address]

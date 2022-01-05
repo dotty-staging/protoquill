@@ -6,7 +6,7 @@ import io.getquill._
 import scala.compiletime.{erasedValue, summonFrom, constValue}
 
 object TypeclassUsecase_TypeclassWithList {
-  
+
   case class Address(street: String, zip: Int) extends Embedded
   val ctx = new MirrorContext(MirrorSqlDialect, Literal)
   import ctx._
@@ -20,19 +20,19 @@ object TypeclassUsecase_TypeclassWithList {
     inline def apply(inline t: T): G
   trait EarlierThan[T]:
     inline def apply(inline a: T, inline b: T): Boolean
-  
-  inline given GroupKey[Node, Int] with
+
+  given GroupKey[Node, Int] with
     inline def apply(inline t: Node): Int = t.id
-  inline given GroupKey[Master, Int] with
+  given GroupKey[Master, Int] with
     inline def apply(inline t: Master): Int = t.key
-  inline given GroupKey[Worker, Int] with 
+  given GroupKey[Worker, Int] with
     inline def apply(inline t: Worker): Int = t.shard
 
-  inline given EarlierThan[Node] with 
+  given EarlierThan[Node] with
     inline def apply(inline a: Node, inline b: Node) = a.timestamp < b.timestamp
-  inline given EarlierThan[Master] with 
+  given EarlierThan[Master] with
     inline def apply(inline a: Master, inline b: Master) = a.lastCheck < b.lastCheck
-  inline given EarlierThan[Worker] with 
+  given EarlierThan[Worker] with
     inline def apply(inline a: Worker, inline b: Worker) = a.lastTime < b.lastTime
 
   trait JoiningFunctor[F[_]]:
