@@ -176,10 +176,11 @@ trait Context[Dialect <: Idiom, Naming <: NamingStrategy] extends ProtoContext[D
         // Need an extractor with special information that helps with the SQL returning specifics
         val Extraction.Returning(extract, returningBehavior) =
           // Just match on the type and throw an exception. The outside val right above will do the deconstruction
-          extraction match
+          (extraction match
             // Can't check types inside Returning[_, _] during runtime due to type-erasure so scala will give a warning
             case _: Extraction.Returning[_, _, _] => extraction
             case _ => throw new IllegalArgumentException("Returning Extractor required")
+          ): @unchecked
 
         val runContext = DatasourceContextInjectionMacro[RunnerBehavior, Runner, this.type](context)
         self.executeActionReturning(sql, prepare, extract, returningBehavior)(executionInfo, runContext)
@@ -206,9 +207,10 @@ trait Context[Dialect <: Idiom, Naming <: NamingStrategy] extends ProtoContext[D
         val runContext = DatasourceContextInjectionMacro[RunnerBehavior, Runner, this.type](context)
 
         val Extraction.Returning(extract, returningBehavior) =
-          extraction match
+          (extraction match
             case _: Extraction.Returning[_, _, _] => extraction
             case _ => throw new IllegalArgumentException("Returning Extractor required")
+          ): @unchecked
 
         // Supporting only one top-level query batch group. Don't know if there are use-cases for multiple queries.
         val group = BatchGroupReturning(sql, returningBehavior, prepares)
