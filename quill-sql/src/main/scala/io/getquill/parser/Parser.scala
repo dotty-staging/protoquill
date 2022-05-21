@@ -271,10 +271,10 @@ class ActionParser(val rootParse: Parser)(using Quotes)
 
 
   def attempt = {
-    case '{ type t; ($query: EntityQueryModel[`t`]).insert(($first: `t`=>(Any,Any)), (${Varargs(others)}: Seq[`t` => (Any, Any)]): _*) } =>
+    case '{ type t; ($query: EntityQueryModel[`t`]).insert(($first: (`t`=>(Any,Any))), (${Varargs(others)}: Seq[`t` => (Any, Any)]): _*) } =>
       val assignments = combineAndCheckAndParse(first, others)(AssignmentTerm.CheckTypes(_))(AssignmentTerm.OrFail(_))
       AInsert(rootParse(query), assignments.toList)
-    case '{ type t; ($query: EntityQueryModel[`t`]).update(($first: `t`=>(Any,Any)), (${Varargs(others)}: Seq[`t` => (Any, Any)]): _*) } =>
+    case '{ type t; ($query: EntityQueryModel[`t`]).update(($first: (`t`=>(Any,Any))), (${Varargs(others)}: Seq[`t` => (Any, Any)]): _*) } =>
       val assignments = combineAndCheckAndParse(first, others)(AssignmentTerm.CheckTypes(_))(AssignmentTerm.OrFail(_))
       AUpdate(rootParse(query), assignments.toList)
     case '{ type t; ($query: EntityQueryModel[`t`]).delete } =>
@@ -315,7 +315,7 @@ class ActionParser(val rootParse: Parser)(using Quotes)
     case '{ ($action: Insert[t]).onConflictIgnore } =>
       OnConflict(rootParse(action), OnConflict.NoTarget, OnConflict.Ignore)
 
-    case '{ type t; ($action: Insert[`t`]).onConflictIgnore(($target: `t` => Any), (${Varargs(targets)}: Seq[`t` => Any]): _*) } =>
+    case '{ type t; ($action: Insert[`t`]).onConflictIgnore(($target: (`t` => Any)), (${Varargs(targets)}: Seq[`t` => Any]): _*) } =>
       val targetProperties = combineAndCheckAndParse(target, targets)(_ => ())(LambdaToProperty.OrFail(_))
       OnConflict(
         rootParse(action),
@@ -323,7 +323,7 @@ class ActionParser(val rootParse: Parser)(using Quotes)
         OnConflict.Ignore
       )
 
-    case '{ type t; ($action: Insert[`t`]).onConflictUpdate(($assign: (`t`,`t`) => (Any, Any)), (${Varargs(assigns)}: Seq[(`t`, `t`) => (Any, Any)]): _*) } =>
+    case '{ type t; ($action: Insert[`t`]).onConflictUpdate(($assign: ((`t`,`t`) => (Any, Any))), (${Varargs(assigns)}: Seq[(`t`, `t`) => (Any, Any)]): _*) } =>
       val assignments = combineAndCheckAndParse(assign, assigns)(AssignmentTerm.CheckTypes(_))(AssignmentTerm.Double.OrFail(_))
       OnConflict(
         rootParse(action),
@@ -331,7 +331,7 @@ class ActionParser(val rootParse: Parser)(using Quotes)
         OnConflict.Update(assignments.toList)
       )
 
-    case '{ type t; ($action: Insert[`t`]).onConflictUpdate(($target: `t` => Any), (${Varargs(targets)}: Seq[`t` => Any]): _*)(($assign: (`t`,`t`) => (Any, Any)), (${Varargs(assigns)}: Seq[(`t`, `t`) => (Any, Any)]): _*) } =>
+    case '{ type t; ($action: Insert[`t`]).onConflictUpdate(($target: (`t` => Any)), (${Varargs(targets)}: Seq[`t` => Any]): _*)(($assign: ((`t`,`t`) => (Any, Any))), (${Varargs(assigns)}: Seq[(`t`, `t`) => (Any, Any)]): _*) } =>
       val assignments = combineAndCheckAndParse(assign, assigns)(AssignmentTerm.CheckTypes(_))(AssignmentTerm.Double.OrFail(_))
       val targetProperties = combineAndCheckAndParse(target, targets)(_ => ())(LambdaToProperty.OrFail(_))
       OnConflict(
