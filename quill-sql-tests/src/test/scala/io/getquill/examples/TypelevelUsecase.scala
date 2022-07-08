@@ -39,9 +39,9 @@ object TypelevelUsecase {
         rp <- query[RoleToPermission].join(rp => rp.roleId == r.id)
         p <- query[Permission].join(p => p.id == rp.roleId)
       } yield (s, r, p)
-  
-  inline def path[F, T](using inline path: Path[F, T]): path.Out = path.get
-  
+
+  inline def path[F, T](using path: Path[F, T]): path.Out = path.get
+
   inline def q1 = quote { path[User, Role].filter(so => so._2.name == "Drinker") }
 
   //inline def q1 = quote { path[User, Permission].filter(urp => urp._2.name == "GuiUser" && urp._1.name == "Joe") }
