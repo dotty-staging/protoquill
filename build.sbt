@@ -1,5 +1,4 @@
 import ReleaseTransformations._
-import DottyLatestNightly._
 //import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 //import scalariform.formatter.preferences._
 import com.jsuereth.sbtpgp.PgpKeys.publishSigned
