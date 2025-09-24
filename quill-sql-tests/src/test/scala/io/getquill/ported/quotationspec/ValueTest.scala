@@ -6,6 +6,7 @@ import io.getquill.Spec
 import io.getquill.ast.{Query => AQuery, _}
 import io.getquill.quat.Quat
 import io.getquill._
+import scala.language.unsafeNulls
 
 class ValueTest extends Spec with NonSerializingQuotation with TestEntities {
   "value" - { //helloo

@@ -6,6 +6,7 @@ import io.getquill.ast.{ Action => AstAction, Query => _, _ }
 import io.getquill.idiom.StringToken
 import io.getquill.Query
 import io.getquill.quat.Quat
+import scala.language.unsafeNulls
 
 class CqlIdiomSpec extends Spec {
 
@@ -413,7 +414,7 @@ class CqlIdiomSpec extends Spec {
     }
     "action" in {
       val t = implicitly[Tokenizer[AstAction]]
-      intercept[IllegalStateException](t.token(null: AstAction))
+      intercept[IllegalStateException](t.token(null: AstAction | Null))
       intercept[IllegalStateException](t.token(Insert(Nested(Ident("a")), Nil)))
     }
     // not actually used anywhere but doing a sanity check here

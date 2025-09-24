@@ -5,6 +5,7 @@ import io.getquill._
 import scala.compiletime.{erasedValue, summonFrom, constValue}
 import io.getquill.QueryDsl._
 import java.sql.Connection
+import scala.language.unsafeNulls
 
 object MiniExample_LiftByKeys {
 
@@ -19,7 +20,7 @@ object MiniExample_LiftByKeys {
   def regularMapProc() = {
     inline def q = quote {
       query[Person].filter(p =>
-        MapFlicer[Person, PrepareRow, Session](p, values, null, (a, b) => (a == b) || (b == (null) ) )
+        MapFlicer[Person, PrepareRow, Session](p, values, null.asInstanceOf[String], (a, b) => (a == b) || (b == (null) ) )
       )
     }
     val r = run(q)

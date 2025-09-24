@@ -7,6 +7,7 @@ import io.getquill.context.mirror.Row
 import io.getquill.context.sql.testContext
 import io.getquill.context.sql.testContext._
 import io.getquill._
+import scala.language.unsafeNulls
 
 class QuerySpec extends Spec {
   "query" - {

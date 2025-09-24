@@ -114,7 +114,7 @@ trait Context[Dialect <: Idiom, Naming <: NamingStrategy] extends ProtoContext[D
      * may have been nullified in the SQL before the filteration has actually happened.
      */
     inline def filterByKeys(inline map: Map[String, String]) =
-      q.filter(p => MapFlicer[T, PrepareRow, Session](p, map, null, (a, b) => (a == b) || (b == (null) ) ))
+      q.filter(p => MapFlicer[T, PrepareRow, Session](p, map, null.asInstanceOf[String], (a, b) => (a == b) || (b == (null) ) ))
 
     inline def filterColumns(inline columns: List[String]) =
       q.map(p => ColumnsFlicer[T, PrepareRow, Session](p, columns))

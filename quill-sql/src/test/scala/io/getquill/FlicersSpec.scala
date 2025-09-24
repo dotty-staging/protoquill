@@ -4,6 +4,7 @@ import io.getquill.context.mirror.Row
 import io.getquill.util.StringOps._
 import io.getquill.context.ExecutionType
 import io.getquill.util.debug.PrintMac
+import scala.language.unsafeNulls
 
 class FlicersSpec extends Spec {
   val ctx = new MirrorContext(MirrorSqlDialect, Literal)
